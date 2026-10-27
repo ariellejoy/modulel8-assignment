@@ -75,8 +75,8 @@ jobs:
        with:
          push: true
          tags: |
-           kaw393939/601_module8:latest
-           kaw393939/601_module8:${{ github.sha }}
+          ariellejoy/module8-assignment:latest
+          ariellejoy/module8-assignment:${{ github.sha }}
          platforms: linux/amd64,linux/arm64
-         cache-from: type=registry,ref=kaw393939/601_module8:cache
+         cache-from: type=registry,ref= ariellejoy/module8-assignment:cache
          cache-to: type=inline,mode=max
