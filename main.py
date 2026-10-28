@@ -17,9 +17,12 @@ import logging
 
 ## routes = URLs on the backend (aka endpoint)
 
-
-# Setup logging
-logging.basicConfig(level=logging.INFO)
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
@@ -78,8 +81,13 @@ async def add_route(operation: OperationRequest):
     """
     Add two numbers.
     """
+    logger.info(
+        "Addition requested: a=%s, b=%s", operation.a, operation.b,
+    )
+
     try:
         result = add(operation.a, operation.b)
+        logger.info("Addition successful: result=%s", result)
         return OperationResponse(result=result)
     except Exception as e:
         logger.error(f"Add Operation Error: {str(e)}")
@@ -93,6 +101,10 @@ async def subtract_route(operation: OperationRequest):
     """
     Subtract two numbers.
     """
+    logger.info(
+        "Subtraction requested: a=%s, b=%s", operation.a, operation.b,
+    )
+
     try:
         result = subtract(operation.a, operation.b)
         return OperationResponse(result=result)
@@ -105,8 +117,12 @@ async def multiply_route(operation: OperationRequest):
     """
     Multiply two numbers.
     """
+    logger.info(
+        "Multiplication requested: a=%s, b=%s", operation.a, operation.b,
+    )
     try:
         result = multiply(operation.a, operation.b)
+        logger.info("Multiplication successful: result=%s", result)
         return OperationResponse(result=result)
     except Exception as e:
         logger.error(f"Multiply Operation Error: {str(e)}")
@@ -117,8 +133,12 @@ async def divide_route(operation: OperationRequest):
     """
     Divide two numbers.
     """
+    logger.info(
+        "Division requested: a=%s, b=%s", operation.a, operation.b,
+    )
     try:
         result = divide(operation.a, operation.b)
+        logger.info("Division successful: result=%s", result)
         return OperationResponse(result=result)
     except ValueError as e:
         logger.error(f"Divide Operation Error: {str(e)}")
