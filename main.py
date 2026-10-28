@@ -3,11 +3,20 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel, Field, field_validator  # Use @validator for Pydantic 1.x
+from pydantic import BaseModel, Field, field_validator  # Use @validator for Pydantic 1.x - pydantic is used for json validation
+## pydantic takes the json and turns it into python and vice versa to send to js
+
 from fastapi.exceptions import RequestValidationError
 from app.operations import add, subtract, multiply, divide  # Ensure correct import path
 import uvicorn
 import logging
+
+## use json (js object notatino) in web apps 
+## serialization = convert object in memory to text
+## allows backend to communicate with the frontend (browser) using json format
+
+## routes = URLs on the backend (aka endpoint)
+
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -56,6 +65,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         content={"error": error_messages},
     )
 
+## using FastAPI to host templates directory
 @app.get("/")
 async def read_root(request: Request):
     """
@@ -63,7 +73,7 @@ async def read_root(request: Request):
     """
     return templates.TemplateResponse("index.html", {"request": request})
 
-@app.post("/add", response_model=OperationResponse, responses={400: {"model": ErrorResponse}})
+@app.post("/add", response_model=OperationResponse, responses={400: {"model": ErrorResponse}}) #defines response for pydantic to send
 async def add_route(operation: OperationRequest):
     """
     Add two numbers.
@@ -74,6 +84,9 @@ async def add_route(operation: OperationRequest):
     except Exception as e:
         logger.error(f"Add Operation Error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
+
+## good response = 200
+## bad response = 400
 
 @app.post("/subtract", response_model=OperationResponse, responses={400: {"model": ErrorResponse}})
 async def subtract_route(operation: OperationRequest):
