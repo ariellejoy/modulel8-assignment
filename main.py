@@ -90,7 +90,7 @@ async def add_route(operation: OperationRequest):
         logger.info("Addition successful: result=%s", result)
         return OperationResponse(result=result)
     except Exception as e:
-        logger.error(f"Add Operation Error: {str(e)}")
+        logger.exception(f"Add Operation Error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
 ## good response = 200
@@ -109,7 +109,7 @@ async def subtract_route(operation: OperationRequest):
         result = subtract(operation.a, operation.b)
         return OperationResponse(result=result)
     except Exception as e:
-        logger.error(f"Subtract Operation Error: {str(e)}")
+        logger.exception(f"Subtract Operation Error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/multiply", response_model=OperationResponse, responses={400: {"model": ErrorResponse}})
@@ -125,7 +125,7 @@ async def multiply_route(operation: OperationRequest):
         logger.info("Multiplication successful: result=%s", result)
         return OperationResponse(result=result)
     except Exception as e:
-        logger.error(f"Multiply Operation Error: {str(e)}")
+        logger.exception(f"Multiply Operation Error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/divide", response_model=OperationResponse, responses={400: {"model": ErrorResponse}})
@@ -141,10 +141,10 @@ async def divide_route(operation: OperationRequest):
         logger.info("Division successful: result=%s", result)
         return OperationResponse(result=result)
     except ValueError as e:
-        logger.error(f"Divide Operation Error: {str(e)}")
+        logger.exception(f"Divide Operation Error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        logger.error(f"Divide Operation Internal Error: {str(e)}")
+        logger.exception(f"Divide Operation Internal Error: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 if __name__ == "__main__":
