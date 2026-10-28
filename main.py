@@ -52,7 +52,7 @@ class ErrorResponse(BaseModel):
 # Custom Exception Handlers
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
-    logger.error(f"HTTPException on {request.url.path}: {exc.detail}")
+    logger.exception(f"HTTPException on {request.url.path}: {exc.detail}")
     return JSONResponse(
         status_code=exc.status_code,
         content={"error": exc.detail},
@@ -62,7 +62,12 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     # Extracting error messages
     error_messages = "; ".join([f"{err['loc'][-1]}: {err['msg']}" for err in exc.errors()])
-    logger.error(f"ValidationError on {request.url.path}: {error_messages}")
+    logger.warning(
+        "Validation failed: method=%s path=%s errors=%s",
+        request.method,
+        request.url.path,
+        error_messages,
+    )
     return JSONResponse(
         status_code=400,
         content={"error": error_messages},
